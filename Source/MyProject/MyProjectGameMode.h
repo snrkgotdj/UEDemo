@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Http.h"
+
 #include "MyProjectGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -13,6 +15,11 @@ class AMyProjectGameMode : public AGameModeBase
 
 public:
 	AMyProjectGameMode();
+
+	virtual void StartPlay() override;
+
+private:
+	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully);
 };
 
 

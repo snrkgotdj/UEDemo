@@ -2,6 +2,7 @@
 
 #include "MyProjectGameMode.h"
 #include "MyProjectCharacter.h"
+#include "Json.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMyProjectGameMode::AMyProjectGameMode()
@@ -12,4 +13,25 @@ AMyProjectGameMode::AMyProjectGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+void AMyProjectGameMode::StartPlay()
+{
+	Super::StartPlay();
+
+	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &AMyProjectGameMode::OnResponseReceived);
+	Request->SetURL("https://jsonplaceholder.typicode.com/posts/1");
+	Request->SetVerb("GET");
+	Request->ProcessRequest();
+}
+
+void AMyProjectGameMode::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+	TSharedPtr<FJsonObject> ResponseObj;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	FJsonSerializer::Deserialize(Reader, ResponseObj);
+
+	UE_LOG(LogTemp, Display, TEXT("Response %s"), *Response->GetContentAsString());
+	UE_LOG(LogTemp, Display, TEXT("Title: %s"), *ResponseObj->GetStringField("title"));
 }
