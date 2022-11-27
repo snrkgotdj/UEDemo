@@ -24,6 +24,8 @@ void AMyProjectGameMode::StartPlay()
 	Request->SetURL("https://jsonplaceholder.typicode.com/posts/1");
 	Request->SetVerb("GET");
 	Request->ProcessRequest();
+
+
 }
 
 void AMyProjectGameMode::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
